@@ -1,146 +1,115 @@
-import random
-import tkinter as tk
-from tkinter import messagebox
-
-#Lista de palabras tematica animales
-palabras = ["ornitorrinco", "canguro", "elefante", "rinoceronte", "jirafa", "hipopotamo", "cocodrilo", "tigre", "pinguino", "ballena", "delfin", "tiburon", "calamar", "medusa", "caballo", "oveja", "gallina", "conejo", "raton", "oso hormiguero", "oso perezoso", "murcielago", "serpiente", "lagartija", "cocodrilo", "tortuga", "iguana", "camaleon", "lagarto"]
-
-#Selecciona una palabra al azar y el numero de letras adivinadas
-palabra_secreta = random.choice(palabras).lower()
+# Palabra fija para el juego
+palabra_secreta = "murcielago"
 letras_adivinadas = set()
 intentos = 6
 
-#Graficos de los estados del ahorcado
+# Dibujo de las etapas del ahorcado
 ahorcado = [
     """
-        -----
-        |   |
-            |
-            |
-            |
-            |
-     --------
+       -----
+       |   |
+           |
+           |
+           |
+           |
+    --------
     """,
     """
-        -----
-        |   |
-        O   |
-            |
-            |
-            |
-     --------
+       -----
+       |   |
+       O   |
+           |
+           |
+           |
+    --------
     """,
     """
-        -----
-        |   |
-        O   |
-        |   |
-            |
-            |
-     --------
+       -----
+       |   |
+       O   |
+       |   |
+           |
+           |
+    --------
     """,
     """
-        -----
-        |   |
-        O   |
-       /|   |
-            |
-            |
-     --------
+       -----
+       |   |
+       O   |
+      /|   |
+           |
+           |
+    --------
     """,
     """
-        -----
-        |   |
-        O   |
-       /|\  |
-            |
-            |
-     --------
+       -----
+       |   |
+       O   |
+      /|\  |
+           |
+           |
+    --------
     """,
     """
-        -----
-        |   |
-        O   |
-       /|\  |
-       /    |
-            |
-     --------
+       -----
+       |   |
+       O   |
+      /|\  |
+      /    |
+           |
+    --------
     """,
     """
-        -----
-        |   |
-        O   |
-       /|\  |
-       / \  |
-            |
-     --------
+       -----
+       |   |
+       O   |
+      /|\  |
+      / \  |
+           |
+    --------
     """
 ]
 
-#Creación de la ventana principal del juego
-ventana = tk.Tk()
-ventana.title("Juego del Ahorcado")
-ventana.geometry("400x600")
+# Pantalla de Inicio del juego
+print(" JUEGO DEL AHORCADO ")
+print("BIENVENIDOS AL JUEGO DEL AHORCADO")
+print("Tematica: Animales")
+print("Buena suerte!")
+print("Solo tienes 6 intentos para encontrar la palabra secreta")
 
-#Texto de la ventana Grafica
-etiqueta = tk.Label(ventana, text="Bienvenido al juego del ahorcado", padx=20, pady=20)
-etiqueta.pack()
-
-#Muestra la palabra con letras adivinadas
-label_palabra = tk.Label(ventana, text="", font=("Arial", 24)) 
-label_palabra.pack(pady=20)
-
-label_ahorcado = tk.Label(ventana, text="", font=("Arial", 14), justify=tk.LEFT)  #Muestra el estado del ahorcado
-label_ahorcado.pack(pady=10)
-
-label_intentos = tk.Label(ventana, text="", font=("Arial", 14))  #Muestra los intentos restantes
-label_intentos.pack(pady=10)
-
-entry_letra = tk.Entry(ventana, font=("Arial", 14))  #Campo para ingresar una letra
-entry_letra.pack(pady=10)
-entry_letra.focus_set()
-
-boton_terminar = tk.Button(ventana, text="Terminar", font=("Arial", 14), command=ventana.destroy)  #Botón para terminar el juego
-boton_terminar.pack(pady=10)
-
-#Función para actualizar la interfaz gráfica
-def actualizar_interfaz():
+# Bucle principal con el que juego funciona
+while intentos > 0:
+    # Mostrar el estado actual del tablero y el dibujo del ahorcado
     tablero = " ".join([letra if letra in letras_adivinadas else "_" for letra in palabra_secreta])
-    label_palabra.config(text=tablero)
-    label_ahorcado.config(text=ahorcado[6 - intentos])
-    label_intentos.config(text=f"Intentos: {intentos}")
+    print(tablero)
+    print(ahorcado[6 - intentos])
 
-#Función para manejar la adivinanza de una letra
-def adivinar_letra(event=None):
-    global intentos
-    letra = entry_letra.get().lower()
-    entry_letra.delete(0, tk.END)
-    #Verifica si la letra ya fue usada
-    if letra in letras_adivinadas:  
-        messagebox.showinfo("Ahorcado", "Letra ya usada.")
-        return
-    # Verifica si la letra está en la palabra secreta
-    if letra in palabra_secreta:  
-        letras_adivinadas.add(letra)# Verifica si el jugador ganó
-        if all(l in letras_adivinadas for l in palabra_secreta):  
-            messagebox.showinfo("Ahorcado","¡Ganaste! Palabra: {palabra_secreta}")
-            reiniciar_juego()
+    # Pedir al jugador que ingrese una letra
+    letra = input("Introduce una letra: ")
+
+    # Verificar si la letra ya fue ingresada no se eliminan los intentos
+    if letra in letras_adivinadas:
+        print("Ya has intentado con esa letra. Prueba con otra.")
+        continue
+
+    # Verificar si la letra está en la palabra secreta
+    # Si la letra está en la palabra, se agrega a las letras adivinadas
+    if letra in palabra_secreta:
+        letras_adivinadas.add(letra)
+        print("La letra está en la palabra.")
+    # Si la letra no está en la palabra, se resta un intento    
     else:
-        intentos -= 1  #Reduce los intentos si la letra es incorrecta
-        if intentos == 0:  #Verifica si el jugador perdió
-            messagebox.showinfo("Ahorcado","Perdiste. Palabra: {palabra_secreta}")
-            reiniciar_juego()
-    actualizar_interfaz()
+        intentos -= 1
+        print("Incorrecto. Te quedan ",intentos, "intentos.")
 
-#Función para reiniciar el juego
-def reiniciar_juego():
-    global palabra_secreta, letras_adivinadas, intentos
-    palabra_secreta = random.choice(palabras).lower()
-    letras_adivinadas = set() 
-    intentos = 6 
-    actualizar_interfaz() 
+    # Verificar si el jugador ha adivinado toda la palabra
+    if all(letra in letras_adivinadas for letra in palabra_secreta):
+        print("Felicidades :) Has adivinado, la palabra era: ", palabra_secreta)
+        break
 
-entry_letra.bind('<Return>', adivinar_letra)
+# Si el jugador se queda sin intentos
+if intentos == 0:
+    print("Lo siento :( Has perdido, La palabra era: " , palabra_secreta)
+    print(ahorcado[6])  # Mostrar el dibujo final del ahorcado
 
-reiniciar_juego()
-ventana.mainloop()
+print("Gracias por jugar")
