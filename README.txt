@@ -39,3 +39,5 @@ Como Jugar
 5. Si la letra no esta en la palabra oculta, se restara un intent y se actualizara el estado del dibujo del ahorcado
 6. Continua ingresando letras hasta que adivines la palabra oculta o te quedes sin intentos.
 7. Al finalizar el juego, se mostrara si haz Ganado o perdido y revelara la palabra oculta
+
+Fecha: 2 de Marzo de 2025
